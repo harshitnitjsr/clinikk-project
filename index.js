@@ -33,7 +33,6 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions)
 app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
-// Use central router for API v1
 app.use("/api/v1", apiRoutes)
 const PORT = process.env.PORT || 5000
 if (require.main === module) {

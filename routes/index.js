@@ -7,7 +7,7 @@ const mediaRoutes = require("./mediaRoutes")
 
 const router = express.Router()
 
-// API v1 routes
+
 router.use("/upload", uploadRoutes)
 router.use("/stream", streamRoutes)
 router.use("/auth", authRoutes)
