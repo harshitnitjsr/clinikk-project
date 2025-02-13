@@ -59,7 +59,7 @@ describe("User Authentication & File API Tests", () => {
     const res = await request(server)
       .post("/upload")
       .set("Authorization", authToken)
-      .attach("file", "./tests/sample.mp3") // Ensure sample.mp3 exists in the tests folder
+      .attach("file", "./tests/sample.mp3")
 
     expect(res.status).toBe(200)
     expect(res.body.url).toBeDefined()
@@ -84,7 +84,7 @@ describe("User Authentication & File API Tests", () => {
   })
 
   it("should return 400 for an invalid file key", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => {}) // Suppress console errors
+    jest.spyOn(console, "error").mockImplementation(() => {})
 
     const res = await request(server).get("/stream/INVALID_KEY")
     expect(res.status).toBe(400)
