@@ -3,10 +3,7 @@ const cors = require("cors")
 const swaggerJsdoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
 require("dotenv").config()
-const uploadRoutes = require("./routes/uploadRoutes")
-const streamRoutes = require("./routes/streamRoutes")
-const userRoutes = require("./routes/authRoutes")
-const mediaRoutes = require("./routes/mediaRoutes")
+const apiRoutes = require("./routes/index")
 const connectDB = require("./config/mongoDb")
 const app = express()
 app.use(
@@ -34,11 +31,10 @@ const swaggerOptions = {
   apis: ["./docs/swagger.yaml"],
 }
 const swaggerDocs = swaggerJsdoc(swaggerOptions)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-app.use("/upload", uploadRoutes)
-app.use("/stream", streamRoutes)
-app.use("/auth", userRoutes)
-app.use("/media", mediaRoutes)
+app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+
+// Use central router for API v1
+app.use("/api/v1", apiRoutes)
 const PORT = process.env.PORT || 5000
 if (require.main === module) {
   app.listen(PORT, () => {

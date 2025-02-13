@@ -1,16 +1,28 @@
 swagger: "2.0"
 info:
   title: File Upload & Streaming API
-  description: API for user authentication, uploading files to AWS S3, and streaming them
+  description: API for user authentication, uploading files to AWS S3, streaming files, and managing media.
   version: 1.0.0
 host: clinikk-project-production.up.railway.app
 schemes:
   - https
+tags:
+  - name: Authentication
+    description: Endpoints for user registration and login
+  - name: File Upload
+    description: Endpoints for uploading files to AWS S3
+  - name: Streaming
+    description: Endpoints for streaming media files
+  - name: Media Management
+    description: Endpoints for fetching and managing media files
+
 paths:
-  /auth/register:
+  /api/v1/auth/register:
     post:
+      tags:
+        - Authentication
       summary: Register a new user
-      description: Creates a new user account with a hashed password
+      description: Creates a new user account with a hashed password.
       consumes:
         - application/json
       parameters:
@@ -50,10 +62,12 @@ paths:
               error:
                 type: string
 
-  /auth/login:
+  /api/v1/auth/login:
     post:
+      tags:
+        - Authentication
       summary: User login
-      description: Authenticates a user and returns a JWT token
+      description: Authenticates a user and returns a JWT token.
       consumes:
         - application/json
       parameters:
@@ -94,10 +108,12 @@ paths:
               error:
                 type: string
 
-  /upload:
+  /api/v1/upload:
     post:
+      tags:
+        - File Upload
       summary: Upload a file to S3
-      description: Uploads a file to AWS S3 and returns the file URL
+      description: Uploads a file to AWS S3 and returns the file URL.
       consumes:
         - multipart/form-data
       parameters:
@@ -121,10 +137,12 @@ paths:
         500:
           description: Server error
 
-  /stream/{key}:
+  /api/v1/stream/{key}:
     get:
+      tags:
+        - Streaming
       summary: Stream a file from S3
-      description: Streams a file from AWS S3, supporting range requests for video and audio streaming
+      description: Streams a file from AWS S3, supporting range requests for video and audio streaming.
       produces:
         - application/octet-stream
         - video/mp4
@@ -143,31 +161,11 @@ paths:
       responses:
         200:
           description: Full file streamed successfully
-          headers:
-            Content-Length:
-              description: Total size of the file in bytes
-              type: integer
-            Content-Type:
-              description: MIME type of the file
-              type: string
           schema:
             type: string
             format: binary
         206:
           description: Partial content streamed
-          headers:
-            Content-Range:
-              description: The range of bytes served
-              type: string
-            Accept-Ranges:
-              description: Indicates support for range requests
-              type: string
-            Content-Length:
-              description: Size of the chunk in bytes
-              type: integer
-            Content-Type:
-              description: MIME type of the file
-              type: string
           schema:
             type: string
             format: binary
@@ -178,7 +176,6 @@ paths:
             properties:
               error:
                 type: string
-                example: "File not found"
         500:
           description: Server error
           schema:
@@ -186,7 +183,92 @@ paths:
             properties:
               error:
                 type: string
-                example: "Error streaming file"
-              details:
+
+  /api/v1/media:
+    get:
+      tags:
+        - Media Management
+      summary: Get all media files
+      description: Fetches a list of all uploaded media files.
+      responses:
+        200:
+          description: Successfully fetched media files
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                _id:
+                  type: string
+                filename:
+                  type: string
+                fileType:
+                  type: string
+                url:
+                  type: string
+                uploadedBy:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              message:
                 type: string
-                example: "Detailed error message"
+              error:
+                type: string
+
+  /api/v1/media/{id}:
+    get:
+      tags:
+        - Media Management
+      summary: Get media file by ID
+      description: Fetches a specific media file by its ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the media file
+          type: string
+      responses:
+        200:
+          description: Successfully fetched the media file
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+              filename:
+                type: string
+              fileType:
+                type: string
+              url:
+                type: string
+              uploadedBy:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+        404:
+          description: Media not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              error:
+                type: string
