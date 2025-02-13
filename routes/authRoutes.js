@@ -9,7 +9,8 @@ router.post("/register", async (req, res) => {
     if (!username || !email || !password || !role) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
       username,
       email,
