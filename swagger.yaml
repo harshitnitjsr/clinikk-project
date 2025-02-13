@@ -1,0 +1,192 @@
+swagger: "2.0"
+info:
+  title: File Upload & Streaming API
+  description: API for user authentication, uploading files to AWS S3, and streaming them
+  version: 1.0.0
+host: localhost:5000
+schemes:
+  - http
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      description: Creates a new user account with a hashed password
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          required: true
+          description: User registration details
+          schema:
+            type: object
+            required:
+              - username
+              - email
+              - password
+              - role
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              role:
+                type: string
+      responses:
+        200:
+          description: User registered successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /login:
+    post:
+      summary: User login
+      description: Authenticates a user and returns a JWT token
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          required: true
+          description: User login credentials
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: Login successful
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+        400:
+          description: Invalid credentials
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+  /upload:
+    post:
+      summary: Upload a file to S3
+      description: Uploads a file to AWS S3 and returns the file URL
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: The file to upload (supports video and audio files)
+      responses:
+        200:
+          description: File uploaded successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              url:
+                type: string
+        400:
+          description: File upload failed
+        500:
+          description: Server error
+
+  /stream/{key}:
+    get:
+      summary: Stream a file from S3
+      description: Streams a file from AWS S3, supporting range requests for video and audio streaming
+      produces:
+        - application/octet-stream
+        - video/mp4
+        - audio/mpeg
+      parameters:
+        - name: key
+          in: path
+          required: true
+          description: The key (filename) of the file stored in S3
+          type: string
+        - name: Range
+          in: header
+          required: false
+          description: The byte range for partial content streaming
+          type: string
+      responses:
+        200:
+          description: Full file streamed successfully
+          headers:
+            Content-Length:
+              description: Total size of the file in bytes
+              type: integer
+            Content-Type:
+              description: MIME type of the file
+              type: string
+          schema:
+            type: string
+            format: binary
+        206:
+          description: Partial content streamed
+          headers:
+            Content-Range:
+              description: The range of bytes served
+              type: string
+            Accept-Ranges:
+              description: Indicates support for range requests
+              type: string
+            Content-Length:
+              description: Size of the chunk in bytes
+              type: integer
+            Content-Type:
+              description: MIME type of the file
+              type: string
+          schema:
+            type: string
+            format: binary
+        404:
+          description: File not found
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "File not found"
+        500:
+          description: Server error
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error streaming file"
+              details:
+                type: string
+                example: "Detailed error message"
