@@ -3,9 +3,9 @@ info:
   title: File Upload & Streaming API
   description: API for user authentication, uploading files to AWS S3, and streaming them
   version: 1.0.0
-host: localhost:5000
+host: clinikk-project-production.up.railway.app
 schemes:
-  - http
+  - https
 paths:
   /auth/register:
     post:
