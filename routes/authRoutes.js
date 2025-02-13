@@ -3,6 +3,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
 const router = express.Router();
+bcrypt.setRandomFallback((len) => {
+  const buf = new Uint8Array(len);
+  return buf.map(() => Math.floor(Math.random() * 256));
+});
 router.post("/register", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
