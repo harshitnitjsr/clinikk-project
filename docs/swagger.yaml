@@ -107,6 +107,11 @@ paths:
       consumes:
         - multipart/form-data
       parameters:
+        - in: header
+          name: token
+          type: string
+          required: true
+          description: Authorization token for authentication
         - in: formData
           name: file
           type: file
@@ -126,7 +131,6 @@ paths:
           description: File upload failed
         500:
           description: Server error
-
   /api/v1/stream/{key}:
     get:
       tags:

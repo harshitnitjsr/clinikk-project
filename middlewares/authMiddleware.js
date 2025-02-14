@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 // Define an asynchronous middleware function for authentication
 const authMiddleware = async (req, res, next) => {
   // Extract the token from the "Authorization" header in the request
-  const token = req.header("Authorization");
+  const token = req.header("Authorization") || req.headers.token;
 
   // If no token is provided, return a 401 Unauthorized response
   if (!token) return res.status(401).json({ message: "Access denied" });
