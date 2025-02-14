@@ -23,41 +23,47 @@ paths:
         - Authentication
       summary: Register a new user
       description: Creates a new user account with a hashed password.
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: user
-          required: true
-          description: User registration details
-          schema:
-            type: object
-            required:
-              - username
-              - email
-              - password
-            properties:
-              username:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                email:
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: password123
       responses:
         200:
           description: User registered successfully
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User registered successfully"
         500:
           description: Server error
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Internal Server Error"
 
   /api/v1/auth/login:
     post:
@@ -65,45 +71,32 @@ paths:
         - Authentication
       summary: User login
       description: Authenticates a user and returns a JWT token.
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: credentials
-          required: true
-          description: User login credentials
-          schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-              password:
-                type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: test@example.com
+                password:
+                  type: string
+                  example: password123
       responses:
         200:
           description: Login successful
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-        400:
-          description: Invalid credentials
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-        500:
-          description: Server error
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
 
   /api/v1/upload:
     post:

@@ -1,11 +1,13 @@
-const express = require("express")
-const cors = require("cors")
-const swaggerJsdoc = require("swagger-jsdoc")
-const swaggerUi = require("swagger-ui-express")
-require("dotenv").config()
-const apiRoutes = require("./routes/index")
-const connectDB = require("./config/mongoDb")
-const app = express()
+const express = require("express");
+const cors = require("cors");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+require("dotenv").config();
+const apiRoutes = require("./routes/index");
+const connectDB = require("./config/mongoDb");
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: [
@@ -15,9 +17,8 @@ app.use(
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
-)
-app.use(express.json())
-connectDB()
+);
+connectDB();
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -26,18 +27,18 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API for uploading files to AWS S3 and streaming them",
     },
-    servers: [{ url: "https://clinikk-project-production.up.railway.app" }],
+    servers: [{ url: "http://localhost:5000" }],
   },
   apis: ["./docs/swagger.yaml"],
-}
-const swaggerDocs = swaggerJsdoc(swaggerOptions)
-app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+};
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use("/api/v1", apiRoutes)
-const PORT = process.env.PORT || 5000
+app.use("/api/v1", apiRoutes);
+const PORT = process.env.PORT || 5000;
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 module.exports = app;
