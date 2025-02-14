@@ -27,7 +27,7 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API for uploading files to AWS S3 and streaming them",
     },
-    servers: [{ url: "http://localhost:5000" }],
+    servers: [{ url: "https://clinikk-project-production.up.railway.app" }],
   },
   apis: ["./docs/swagger.yaml"],
 };
