@@ -15,7 +15,8 @@ app.use(
       "https://clinikk-project-production.up.railway.app",
     ],
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 connectDB();

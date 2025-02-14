@@ -1,22 +1,20 @@
-const express = require("express")
-const upload = require("../middlewares/uploadMiddleware")
-const Media = require("../models/Media.model")
-const authMiddleware = require("../middlewares/authMiddleware")
-
-const router = express.Router()
+const express = require("express");
+const upload = require("../middlewares/uploadMiddleware");
+const Media = require("../models/Media.model");
+const router = express.Router();
 
 router.post("/", upload.single("file"), async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: "File upload failed" })
+    return res.status(400).json({ error: "File upload failed" });
   }
   const newMedia = new Media({
     filename: req.file.originalname,
     url: req.file.location,
-    uploadedBy: "67ae498370ce59cea73135ab",
-  })
-  await newMedia.save()
+    uploadedBy: req.user._id,
+  });
+  await newMedia.save();
 
-  res.json({ message: "File uploaded successfully", url: req.file.location })
-})
+  res.json({ message: "File uploaded successfully", url: req.file.location });
+});
 
 module.exports = router;
