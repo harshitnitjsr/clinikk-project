@@ -9,8 +9,8 @@ bcrypt.setRandomFallback((len) => {
 });
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
-    if (!username || !email || !password || !role) {
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const salt = await bcrypt.genSalt(10);
@@ -19,7 +19,6 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role,
     });
 
     await newUser.save();
