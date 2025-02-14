@@ -13,6 +13,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://clinikk-project-production.up.railway.app",
+      "https://clinikk-frontend-demo.vercel.app",
     ],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
