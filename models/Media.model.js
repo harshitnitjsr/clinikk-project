@@ -1,4 +1,6 @@
-const mongoose = require("mongoose")
+//Media Schema
+
+const mongoose = require("mongoose");
 
 const MediaSchema = new mongoose.Schema({
   filename: { type: String, required: true },
@@ -9,6 +11,6 @@ const MediaSchema = new mongoose.Schema({
     required: true,
   },
   createdAt: { type: Date, default: Date.now },
-})
+});
 
 module.exports = mongoose.model("Media", MediaSchema);
