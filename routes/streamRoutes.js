@@ -9,9 +9,9 @@ router.get("/:key", async (req, res) => {
   try {
     const { key } = req.params
     const params = { Bucket: bucketName, Key: `media/${key}` }
-
     const head = await s3.send(new HeadObjectCommand(params))
     const fileSize = head.ContentLength
+
     const range = req.headers.range
 
     if (range) {
